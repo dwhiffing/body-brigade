@@ -42,7 +42,7 @@ export default class MatchService {
   }
 
   hasValidMatch (match = this.getMatch()) {
-    return match[match.length - 1].index === 1
+    return match[match.length - 1].index === window.numTiles
   }
 
   resolveMatch () {
@@ -54,7 +54,7 @@ export default class MatchService {
     if (this.hasValidMatch(match)) {
       for (let i = match.length - 1; i >= 0; i--) {
         const strongIndex = match[0].index + 1
-        const type = i === match.length - 1 ? strongIndex : 1
+        const type = i === match.length - 1 ? strongIndex : window.numTiles
         this.tileService.updateTile(match[i], type)
       }
       return match
@@ -126,7 +126,7 @@ export default class MatchService {
   }
 
   _tilesCanMatch (tile, last, matchType, useIsLongEnough) {
-    if (!last || last.index === 1) {
+    if (!last || last.index === window.numTiles) {
       return
     }
     // tile must be same medicine to match
@@ -135,9 +135,9 @@ export default class MatchService {
     const isAdjacent = this.tileService._checkAdjacent(tile, last)
     const isBonus =
       this.tileService.getTileType(tile) === 'bonus' && tile.index === matchType
+    const isBloodCell = tile.index === window.numTiles
     const isLongEnough =
       this.path.length === Math.ceil(matchType / 4) - (useIsLongEnough ? 1 : 0)
-    const isBloodCell = tile.index === 1
     const thing = isLongEnough ? isBloodCell : isBonus
     return isAdjacent && thing
   }

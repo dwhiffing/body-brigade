@@ -9,6 +9,7 @@ import MenuState from './states/Menu'
 import GameOverState from './states/GameOver'
 
 window.numLevels = 3
+window.numTiles = 13
 
 class Game extends Phaser.Game {
   constructor () {

@@ -1,4 +1,4 @@
-// import Tile from '../sprites/Tile'
+import get from 'lodash/get'
 
 export default class TileService {
   constructor (level) {
@@ -54,17 +54,18 @@ export default class TileService {
   }
 
   getTileType (tile) {
+    if (tile.index === window.numTiles) {
+      return 'normal'
+    }
     const index = (tile.index - 1) % 4
     switch (index) {
       case 0:
-        return 'normal'
-      case 1:
         return 'bonus'
-      case 2:
+      case 1:
         return 'strong'
-      case 3:
+      case 2:
         return 'malignant'
-      case 4:
+      case 3:
         return 'benign'
     }
   }
@@ -78,7 +79,7 @@ export default class TileService {
       if (badTiles.includes(tile.gridIndex)) {
         const tiles = this.getAdjacentForTile(tile)
         tiles.forEach(_tile => {
-          if (_tile && _tile.index === 1) {
+          if (_tile && /bonus|normal/.test(this.getTileType(_tile))) {
             this.updateTile(_tile, tile.index)
           }
         })
@@ -107,10 +108,11 @@ export default class TileService {
     if (!tile) {
       return []
     }
-    const leftAbove = this.layer.layer.data[tile.y - 1][tile.x - 1]
-    const rightAbove = this.layer.layer.data[tile.y - 1][tile.x + 1]
-    const leftBelow = this.layer.layer.data[tile.y + 1][tile.x - 1]
-    const rightBelow = this.layer.layer.data[tile.y + 1][tile.x + 1]
+    const thing = this.layer.layer.data
+    const leftAbove = get(thing, `[${tile.y - 1}][${tile.x - 1}]`)
+    const rightAbove = get(thing, `[${tile.y - 1}][${tile.x + 1}]`)
+    const leftBelow = get(thing, `[${tile.y + 1}][${tile.x - 1}]`)
+    const rightBelow = get(thing, `[${tile.y + 1}][${tile.x + 1}]`)
     return [leftAbove, rightAbove, leftBelow, rightBelow]
   }
 
@@ -131,11 +133,12 @@ export default class TileService {
           this.getDiagonalForTile(tile)
         )
         tiles.forEach(other => {
-          if (
-            tile.index === 2 ||
-            (other &&
-              this._checkAdjacent(tile, other) &&
-              other.index === tile.index)
+          if (tile.index === 1) {
+            numPairs++
+          } else if (
+            other &&
+            this._checkAdjacent(tile, other) &&
+            other.index === tile.index
           ) {
             numPairs++
           }
