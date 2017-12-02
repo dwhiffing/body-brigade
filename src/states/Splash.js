@@ -15,7 +15,7 @@ export default class extends Phaser.State {
       'loaderBar'
     )
 
-    for (var i = 1; i <= 1; i++) {
+    for (var i = 1; i <= window.numLevels; i++) {
       this.load.tilemap(
         `level${i}`,
         `assets/levels/level_${i}.json`,

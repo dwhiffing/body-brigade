@@ -8,6 +8,8 @@ import GameState from './states/Game'
 import MenuState from './states/Menu'
 import GameOverState from './states/GameOver'
 
+window.numLevels = 3
+
 class Game extends Phaser.Game {
   constructor () {
     const tileSize = 70

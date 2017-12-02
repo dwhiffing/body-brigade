@@ -11,20 +11,13 @@ export default class GameService {
     this.removedTiles = []
     this.visited = []
     this.state = state
-
-    let tileData = null
-
-    try {
-      tileData = JSON.parse(localStorage.getItem('tile'))
-    } catch (e) {}
+    this.level = 3
 
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
     // this.uiService = new UIService()
-    this.tileService = new TileService()
-
-    this.tileService.init(this, tileData)
+    this.tileService = new TileService(this.level)
 
     this.damageService = new DamageService(this)
 
@@ -62,12 +55,11 @@ export default class GameService {
       const hasWon = this.tileService.numMalignantRemaining() === 0
       const numMatches = this.tileService.numMatchesRemaining()
       const hasLost = numMatches === 0
-      console.log(this.tileService.numMalignantRemaining())
 
       if (hasWon) {
-        console.log('win')
+        this.nextLevel()
       } else if (hasLost) {
-        console.log('lose')
+        this.restartLevel()
       }
     }
 
@@ -86,5 +78,18 @@ export default class GameService {
     if (!this.game.input.onDown.has(this.onPress, this)) {
       this.game.input.onDown.add(this.onPress, this)
     }
+  }
+
+  restartLevel () {
+    if (this.level > window.numLevels) {
+      this.game.state.start('GameOver')
+    } else {
+      this.tileService.loadLevel(this.level)
+    }
+  }
+
+  nextLevel () {
+    this.level++
+    this.restartLevel()
   }
 }

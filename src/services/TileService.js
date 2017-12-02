@@ -1,17 +1,25 @@
 // import Tile from '../sprites/Tile'
 
 export default class TileService {
-  constructor () {
+  constructor (level) {
     this.game = window.game
     this.size = 128
-    this.map = this.game.add.tilemap('level1')
+    this.loadLevel(level)
+  }
+
+  loadLevel (level) {
+    this.destroyLevel()
+
+    this.map = this.game.add.tilemap('level' + level)
     this.map.addTilesetImage('Tiles', 'tile')
     this.layer = this.map.createLayer('Tile Layer 1')
+
     this.updateTiles()
   }
 
-  init (gameService, data) {
-    this.gameService = gameService
+  destroyLevel () {
+    if (this.map) this.map.destroy()
+    if (this.layer) this.layer.destroy()
   }
 
   getTile ({ x, y }) {
@@ -104,8 +112,6 @@ export default class TileService {
       }
       return numPairs
     })
-
-    console.log(matches)
 
     return matches.reduce((s, t) => t + s, 0)
   }
