@@ -13,6 +13,12 @@ export default class GameService {
     this.state = state
     this.level = 1
 
+    this.menus = {
+      1: { title: 'Blue' },
+      11: { title: 'Purple' },
+      21: { title: 'Green' }
+    }
+
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
@@ -27,6 +33,8 @@ export default class GameService {
     this.arrowService = new ArrowService(this)
 
     this.menu = new Menu({ game: this.game })
+
+    this.restartLevel()
   }
 
   onPress ({ position }) {
@@ -57,7 +65,9 @@ export default class GameService {
       const hasLost = numMatches === 0
 
       if (hasWon) {
-        this.nextLevel()
+        setTimeout(() => {
+          this.nextLevel()
+        }, 1000)
       } else if (hasLost) {
         this.restartLevel()
       }
@@ -70,7 +80,6 @@ export default class GameService {
   }
 
   allowInput () {
-    this.tileService.save()
     if (!this.game.input.onDown.has(this.onPress, this)) {
       this.game.input.onDown.add(this.onPress, this)
     }
@@ -79,6 +88,15 @@ export default class GameService {
   restartLevel () {
     this.game.input.onUp.remove(this.onRelease, this)
     this.game.input.deleteMoveCallback(this.onMove, this)
+
+    if (this.menus[this.level]) {
+      this.menu.show(this.menus[this.level]).then(() => {
+        this.allowInput()
+      })
+    } else {
+      this.allowInput()
+    }
+
     if (this.level > window.numLevels) {
       this.game.state.start('GameOver')
     } else {
@@ -92,16 +110,10 @@ export default class GameService {
   nextLevel () {
     this.level++
     this.restartLevel()
-    this.menu.show({ title: 'test' }).then(() => {
-      this.allowInput()
-    })
   }
 
   prevLevel () {
     this.level--
     this.restartLevel()
-    this.menu.show({ title: 'test' }).then(() => {
-      this.allowInput()
-    })
   }
 }

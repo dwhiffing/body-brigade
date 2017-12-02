@@ -1,10 +1,10 @@
 import get from 'lodash/get'
+import compact from 'lodash/compact'
 
 export default class TileService {
   constructor (level) {
     this.game = window.game
     this.size = 128
-    this.loadLevel(level)
   }
 
   loadLevel (level) {
@@ -49,10 +49,6 @@ export default class TileService {
     this.map.putTile(index, tile.x, tile.y)
   }
 
-  save () {
-    localStorage.setItem('tile', JSON.stringify(this.tiles.map(t => t.index)))
-  }
-
   getTileType (tile) {
     if (tile.index === window.numTiles) {
       return 'normal'
@@ -76,20 +72,27 @@ export default class TileService {
     })
 
     this.map.forEach(tile => {
-      if (badTiles.includes(tile.gridIndex)) {
-        const tiles = this.getAdjacentForTile(tile)
+      if (!badTiles.includes(tile.gridIndex)) {
+        return
+      }
+
+      if (tile.splitCounter === -1 || typeof tile.splitCounter !== 'number') {
+        tile.splitCounter = 3 - Math.ceil(tile.index / 4)
+      }
+
+      if (tile.splitCounter > 0) {
+        tile.splitCounter -= 1
+      } else if (tile.splitCounter === 0) {
+        const tiles = compact(this.getAdjacentForTile(tile))
         tiles.forEach(_tile => {
-          if (_tile && /bonus|normal/.test(this.getTileType(_tile))) {
+          if (/bonus|normal/.test(this.getTileType(_tile))) {
             this.updateTile(_tile, tile.index)
           }
         })
-      }
-    })
-    this.map.forEach(tile => {
-      if (badTiles.includes(tile.gridIndex)) {
         this.updateTile(tile, tile.index + 1)
       }
     })
+
     this.updateTiles()
   }
 
