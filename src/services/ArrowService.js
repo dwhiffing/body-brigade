@@ -4,6 +4,7 @@ export default class ArrowService {
   constructor (gameService) {
     this.game = window.game
     this.damageService = gameService.damageService
+    this.matchService = gameService.matchService
     this.update = this.update.bind(this)
 
     this.group = this.game.add.group()
@@ -26,7 +27,7 @@ export default class ArrowService {
     this.clear()
     this.tileIndexes = JSON.stringify(tiles.map(t => t.gridIndex))
 
-    if (tiles.length >= 3) {
+    if (this.matchService.hasValidMatch()) {
       this.damageText.alpha = 1
       this.damageText.text = `MATCH`
     }

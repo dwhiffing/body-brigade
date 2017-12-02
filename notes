@@ -91,3 +91,5 @@ if it multiplies to a white cell, it multiplies benign
 the goal of each level is to remove all malignant cells
 you lose if the board ever contains only red cells and bad cells
 there could be 3 varieties of bad cells that are resistant to different types of treatment
+in order to stop multiplication, player need to use medicine to strengthen cells near bad cells
+there is a specific medicine for each color of bad cell

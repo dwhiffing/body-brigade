@@ -30,8 +30,8 @@ export default class GameService {
 
     // this.uiService.init(this)
 
-    this.arrowService = new ArrowService(this)
     this.matchService = new MatchService(this)
+    this.arrowService = new ArrowService(this)
 
     this.menu = new Menu({ game: this.game })
   }
@@ -58,18 +58,24 @@ export default class GameService {
 
     const match = this.matchService.resolveMatch()
     if (match) {
-      match.forEach(tile => {
-        tile.picked = false
-        this.tileService.destroyTile(tile)
-      })
+      this.tileService.spreadCancer(match)
+      const hasWon = this.tileService.numMalignantRemaining() === 0
+      const numMatches = this.tileService.numMatchesRemaining()
+      const hasLost = numMatches === 0
+      console.log(this.tileService.numMalignantRemaining())
 
-      this.tileService.placeNewTiles(match)
-      this.allowInput()
-      // this.menu.show({
-      //   data: menu.data,
-      //   title: menu.title,
-      // })
+      if (hasWon) {
+        console.log('win')
+      } else if (hasLost) {
+        console.log('lose')
+      }
     }
+
+    this.allowInput()
+    // this.menu.show({
+    //   data: menu.data,
+    //   title: menu.title,
+    // })
 
     this.matchService.clearPath()
     this.allowInput()

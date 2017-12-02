@@ -3,7 +3,6 @@ export default class MatchService {
     this.game = window.game
     this.tileService = gameService.tileService
     this.path = []
-    this.match = []
   }
 
   selectTile (position) {
@@ -12,8 +11,11 @@ export default class MatchService {
       return
     }
 
-    if (this.path.length === 0) {
-      this._highlightMatchingTiles(tile.gridIndex)
+    if (
+      this.path.length === 0 &&
+      this.tileService.getTileType(tile) === 'bonus'
+    ) {
+      this._highlightMatchingTiles(tile.index)
       this._select(tile)
       return tile
     }
@@ -25,29 +27,44 @@ export default class MatchService {
     }
   }
 
+  getMatch () {
+    let match = []
+    for (let i = 0; i < this.path.length; i++) {
+      const tile = this.tileService.tiles[this.path[i]]
+      match.push(tile)
+    }
+    return match
+  }
+
+  hasValidMatch (match = this.getMatch()) {
+    return match[match.length - 1].index === 1
+  }
+
   resolveMatch () {
-    if (this.path.length < 3) {
-      this.path.forEach(t => (this.tileService.tiles[t].picked = false))
+    const match = this.getMatch()
+    if (match.length === 1) {
       return false
     }
 
-    for (let i = 0; i < this.path.length; i++) {
-      const tile = this.tileService.tiles[this.path[i]]
-      this.match.push(tile)
+    if (this.hasValidMatch(match)) {
+      for (let i = match.length - 1; i >= 0; i--) {
+        const strongIndex = match[0].index + 1
+        const type = i === match.length - 1 ? strongIndex : 1
+        this.tileService.updateTile(match[i], type)
+      }
+      return match
     }
 
-    return this.clearPath()
+    this.clearPath()
   }
 
   clearPath () {
-    const match = this.match.concat([])
+    this.path.forEach(t => (this.tileService.tiles[t].picked = false))
     this.path = []
-    this.match = []
-    this.tileService.tiles.forEach(t => {
-      t.alpha = 1
+    this.tileService.map.forEach(tile => {
+      tile.alpha = 1
+      tile.dirty = true
     })
-
-    return match
   }
 
   getTilesInMatch () {
@@ -75,21 +92,29 @@ export default class MatchService {
   }
 
   _highlightMatchingTiles (index) {
-    this.tileService.tiles.forEach(t => {
-      if (index === 0 || index === 1) {
-        if (t.index > 1) {
-          t.alpha = 0.5
-        }
-      } else if (t.index !== index) {
-        t.alpha = 0.5
-      }
+    this.tileService.map.forEach(tile => {
+      tile.alpha = tile.index === index ? 1 : 0.5
+      tile.dirty = true
     })
   }
 
   _isValidMatch (tile, last) {
-    return (
-      this.tileService._checkAdjacent(tile, last) &&
-      (tile.index === last.index || (tile.index <= 2 && last.index <= 2))
-    )
+    if (this.path.length === 1) {
+      this.matchType = last.index
+    }
+    if (!last || last.index === 1) {
+      return
+    }
+    // tile must be same medicine to match
+    // if match is already of length 2/3, then red blood cells are also valid
+    // a match cannot be resolved if it doesn't end with a red blood cell
+    const isAdjacent = this.tileService._checkAdjacent(tile, last)
+    const isBonus =
+      this.tileService.getTileType(tile) === 'bonus' &&
+      tile.index === this.matchType
+    const isLongEnough = this.path.length === Math.ceil(this.matchType / 4)
+    const isBloodCell = tile.index === 1
+    const thing = isLongEnough ? isBloodCell : isBonus
+    return isAdjacent && thing
   }
 }
