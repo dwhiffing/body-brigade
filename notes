@@ -1,0 +1,85 @@
+Game options
+  Antonio: 13%
+    Cancer game
+  Hope: 40%
+    Bunny game
+  Evan: 33%
+    Space game
+
+Ideas
+  Antonio
+    Dungeon raid clone, simplified for children with cancer theme
+    tile based games where cancer cells replicate, player has to keep them from replicating too much
+
+  Hope
+    Tamagotchi themed around bunnies
+    Clicker game themed around bunnies
+
+  Evan
+    Educational game about space/planets
+    Defend central planet by launching bullets that are affected by gravity into enemies
+
+
+Going with Antonio
+  Using dungeon raid prototype
+  blood cells with replace green arrow trail
+  enemies are replaced by (bad cells, cancers, viruses, tumors, infections)
+  swords, shields, and gold are placed by medicines (white cells, chemo packs, steroids, etc)
+  Should help kids understand body and illness
+  3 heros Luke Nuero Brainer
+  Each hero would have a cape but would be in a shape of a blood cell with eyes mouth and nose.
+
+Assets
+  Sprites
+
+    Intro Graphic?
+    Game over graphic?
+
+    Body themed background
+      Animation?
+
+    Enemy tiles
+      bad cells, cancers, viruses, tumors, infections
+
+    Bonus tiles
+      white cells, chemo packs, steroids
+
+    Player Graphics
+      Luke, Nuero, Brainer
+      Capes
+      shaped like blood cell
+      eyes and nose
+
+    Blood Cell trail
+      Animation of cells moving?
+    Education on cancer
+      research!
+
+  Sounds
+    new tile in match
+    resolve match
+    level up
+    Cancer cells dividing
+    game over
+    victory
+    gameplay music?
+
+  Options
+    Mute sound
+    Mute music
+    Disable haptics
+
+  States
+    Intro
+    Game
+    Score
+
+  Levels
+    aim for 10?
+
+  Gameplay
+    6x6 tile grid with 5 tile varieties? Or Snake and bake sized layout?
+    player matches adjacent tiles in a single line by tracing with finger
+    each time the player matches, cancer cells divide
+    player must eliminate all cancer cells to win
+    
