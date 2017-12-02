@@ -7,7 +7,11 @@ export default class MatchService {
 
   selectTile (position) {
     const tile = this.tileService.getTile(position)
-    if (!tile || this._checkForDeselect(tile) || tile.picked) {
+    if (!tile) {
+      return
+    }
+    if (this._checkForDeselect(tile) || tile.picked) {
+      this._highlightMatchingTiles(tile)
       return
     }
 
@@ -15,13 +19,14 @@ export default class MatchService {
       this.path.length === 0 &&
       this.tileService.getTileType(tile) === 'bonus'
     ) {
-      this._highlightMatchingTiles(tile.index)
+      this._highlightMatchingTiles(tile)
       this._select(tile)
       return tile
     }
 
     const last = this._getLast(1)
     if (this._isValidMatch(tile, last)) {
+      this._highlightMatchingTiles(tile)
       this._select(tile)
       return [tile, last]
     }
@@ -73,6 +78,7 @@ export default class MatchService {
 
   _select (tile) {
     tile.picked = true
+
     this.path.push(tile.gridIndex)
   }
 
@@ -91,9 +97,23 @@ export default class MatchService {
     return this.tileService.tiles[this.path[this.path.length - n]]
   }
 
-  _highlightMatchingTiles (index) {
+  _highlightMatchingTiles (_tile) {
+    const tiles = this.tileService
+      .getAdjacentForTile(_tile)
+      .concat(this.tileService.getDiagonalForTile(_tile))
+
     this.tileService.map.forEach(tile => {
-      tile.alpha = tile.index === index ? 1 : 0.5
+      tile.alpha =
+        tile === _tile || this.path.includes(tile.gridIndex) ? 1 : 0.5
+      if (tiles.indexOf(tile) > -1) {
+        if (
+          this.path.includes(tile.gridIndex) ||
+          _tile === tile ||
+          this._tilesCanMatch(tile, _tile, _tile.index, false)
+        ) {
+          tile.alpha = 1
+        }
+      }
       tile.dirty = true
     })
   }
@@ -102,6 +122,10 @@ export default class MatchService {
     if (this.path.length === 1) {
       this.matchType = last.index
     }
+    return this._tilesCanMatch(tile, last, this.matchType, true)
+  }
+
+  _tilesCanMatch (tile, last, matchType, useIsLongEnough) {
     if (!last || last.index === 1) {
       return
     }
@@ -110,9 +134,8 @@ export default class MatchService {
     // a match cannot be resolved if it doesn't end with a red blood cell
     const isAdjacent = this.tileService._checkAdjacent(tile, last)
     const isBonus =
-      this.tileService.getTileType(tile) === 'bonus' &&
-      tile.index === this.matchType
-    const isLongEnough = this.path.length === Math.ceil(this.matchType / 4)
+      this.tileService.getTileType(tile) === 'bonus' && tile.index === matchType
+    const isLongEnough = this.path.length === Math.ceil(matchType / 4)
     const isBloodCell = tile.index === 1
     const thing = isLongEnough ? isBloodCell : isBonus
     return isAdjacent && thing

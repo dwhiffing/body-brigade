@@ -76,22 +76,12 @@ export default class TileService {
 
     this.map.forEach(tile => {
       if (badTiles.includes(tile.gridIndex)) {
-        const left = this.map.getTileLeft(0, tile.x, tile.y)
-        const right = this.map.getTileRight(0, tile.x, tile.y)
-        const above = this.map.getTileAbove(0, tile.x, tile.y)
-        const below = this.map.getTileBelow(0, tile.x, tile.y)
-        if (left && left.index === 1) {
-          this.updateTile(left, tile.index)
-        }
-        if (right && right.index === 1) {
-          this.updateTile(right, tile.index)
-        }
-        if (above && above.index === 1) {
-          this.updateTile(above, tile.index)
-        }
-        if (below && below.index === 1) {
-          this.updateTile(below, tile.index)
-        }
+        const tiles = this.getAdjacentForTile(tile)
+        tiles.forEach(_tile => {
+          if (_tile && _tile.index === 1) {
+            this.updateTile(_tile, tile.index)
+          }
+        })
       }
     })
     this.map.forEach(tile => {
@@ -100,6 +90,28 @@ export default class TileService {
       }
     })
     this.updateTiles()
+  }
+
+  getAdjacentForTile (tile) {
+    if (!tile) {
+      return []
+    }
+    const left = this.map.getTileLeft(0, tile.x, tile.y)
+    const right = this.map.getTileRight(0, tile.x, tile.y)
+    const above = this.map.getTileAbove(0, tile.x, tile.y)
+    const below = this.map.getTileBelow(0, tile.x, tile.y)
+    return [left, above, right, below]
+  }
+
+  getDiagonalForTile (tile) {
+    if (!tile) {
+      return []
+    }
+    const leftAbove = this.layer.layer.data[tile.y - 1][tile.x - 1]
+    const rightAbove = this.layer.layer.data[tile.y - 1][tile.x + 1]
+    const leftBelow = this.layer.layer.data[tile.y + 1][tile.x - 1]
+    const rightBelow = this.layer.layer.data[tile.y + 1][tile.x + 1]
+    return [leftAbove, rightAbove, leftBelow, rightBelow]
   }
 
   numMalignantRemaining () {
@@ -115,8 +127,15 @@ export default class TileService {
     const matches = this.tiles.map(tile => {
       let numPairs = 0
       if (this.getTileType(tile) === 'bonus') {
-        this.tiles.forEach(other => {
-          if (this._checkAdjacent(tile, other) && other.index === tile.index) {
+        const tiles = this.getAdjacentForTile(tile).concat(
+          this.getDiagonalForTile(tile)
+        )
+        tiles.forEach(other => {
+          if (
+            other &&
+            this._checkAdjacent(tile, other) &&
+            other.index === tile.index
+          ) {
             numPairs++
           }
         })
