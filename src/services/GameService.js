@@ -11,7 +11,7 @@ export default class GameService {
     this.removedTiles = []
     this.visited = []
     this.state = state
-    this.level = 3
+    this.level = 1
 
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)

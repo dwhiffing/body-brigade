@@ -5,7 +5,7 @@ export default class extends Phaser.State {
   preload () {}
 
   create (game) {
-    const text = game.add.text(game.width / 2, game.height / 2, 'Dungeon Raid')
+    const text = game.add.text(game.width / 2, game.height / 2, 'Games on Demand')
     text.fill = '#fff'
     text.inputEnabled = true
     text.anchor.setTo(0.5)

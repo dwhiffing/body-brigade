@@ -8,7 +8,7 @@ Game options
 
 Ideas
   Antonio
-    Dungeon raid clone, simplified for children with cancer theme
+    Dungeon Raid clone, simplified for children with cancer theme
     tile based games where cancer cells replicate, player has to keep them from replicating too much
 
   Hope
@@ -21,7 +21,7 @@ Ideas
 
 
 Going with Antonio
-  Using dungeon raid prototype
+  Using Dungeon Raid prototype
   blood cells with replace green arrow trail
   enemies are replaced by (bad cells, cancers, viruses, tumors, infections)
   swords, shields, and gold are placed by medicines (white cells, chemo packs, steroids, etc)
@@ -93,3 +93,5 @@ you lose if the board ever contains only red cells and bad cells
 there could be 3 varieties of bad cells that are resistant to different types of treatment
 in order to stop multiplication, player need to use medicine to strengthen cells near bad cells
 there is a specific medicine for each color of bad cell
+each higher medicine requires more of it to treat a single cell
+  blue: 1, purple 2, green 3

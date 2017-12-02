@@ -42,19 +42,6 @@ export default class UIService {
     this.update()
   }
 
-  drawHeader () {
-    const x = window.game.width
-    this.header = window.game.add.graphics(0, 0)
-    this.header.beginFill(0x222222)
-    this.header.drawRect(0, 0, x, 120)
-    this.header.beginFill(0x888888)
-    this.header.drawRect(0, 115, x, 5)
-
-    const text = this._initText(x / 2 + 5, 60, 'Dungeon Raid', '#77BFA3', 40)
-    text.inputEnabled = true
-    text.events.onInputUp.add(() => this.game.state.start('GameOver'))
-  }
-
   update () {
     this.texts.gold.text = `0`
     this.texts.health.text = `0`
