@@ -16,49 +16,50 @@ export default class UIService {
 
   init (gameService) {
     this.state = gameService.state
+    this.gameService = gameService
     this.textGroup = this.game.add.group()
     const x =
       window.game.width >= window.gridSize ? window.gridSize : window.game.width
     const y = window.game.height
-    const gold = this._initText(70, y - 40, '0/50', '#ffff00', 32)
-    const health = this._initText(x - 70, y - 40, '50/50', '#ff0000', 32)
-    const armor = this._initText(x / 2, y - 70, '0/4', '#6562F0', 18)
-    const base = this._initText(x / 2 - 60, y - 70, '+5', '#ffffff', 18)
-    const weapon = this._initText(x / 2 + 60, y - 70, '+3', '#ffffff', 18)
-    const upgrade = this._initText(x / 2, y - 40, '0/100', '#6562F0', 24)
-    const experience = this._initText(x / 2, y - 10, '0/100', '#00ff00', 24)
-    this.textGroup.add(gold)
-    this.textGroup.add(health)
-    this.textGroup.add(armor)
-    this.textGroup.add(base)
-    this.textGroup.add(weapon)
-    this.textGroup.add(upgrade)
-    this.textGroup.add(experience)
+    const last = this._initText(70, y - 60, 'Last level', '#ffffff', 22, () => {
+      this.gameService.prevLevel()
+    })
+    const next = this._initText(
+      x - 70,
+      y - 60,
+      'Next Level',
+      '#ffffff',
+      22,
+      () => {
+        this.gameService.nextLevel()
+      }
+    )
+    next.anchor.x = 1
+    const retry = this._initText(x / 2, y - 60, 'Retry', '#ffffff', 22, () => {
+      this.gameService.restartLevel()
+    })
+    retry.anchor.x = 0.5
+    this.textGroup.add(last)
+    this.textGroup.add(next)
+    this.textGroup.add(retry)
     this.textGroup.x = window.leftBuffer + 5
 
     this.group.add(this.textGroup)
 
-    this.texts = { gold, health, armor, base, weapon, upgrade, experience }
+    this.texts = { last, next, retry }
     this.update()
   }
 
-  update () {
-    this.texts.gold.text = `0`
-    this.texts.health.text = `0`
-    this.texts.armor.text = `0`
-    this.texts.upgrade.text = `0`
-    this.texts.experience.text = `0`
-    this.texts.weapon.text = `0`
-    this.texts.base.text = `0`
-  }
+  update () {}
 
-  _initText (x, y, string, fill, size) {
-    const state = window.game.state.states[window.game.state.current]
-    const text = state.add.text(x, y, string)
-    text.padding.set(10, 16)
-    text.anchor.setTo(0.5)
-    text.fontSize = size
+  _initText (x, y, string, fill, size, callback) {
+    const text = this.game.add.text(x, y, string)
     text.fill = fill
+    text.fontSize = size
+    if (callback) {
+      text.inputEnabled = true
+      text.events.onInputUp.add(callback)
+    }
     return text
   }
 }

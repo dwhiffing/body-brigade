@@ -2,7 +2,7 @@ import ArrowService from './ArrowService'
 import TileService from './TileService'
 import MatchService from './MatchService'
 import Menu from '../sprites/Menu'
-// import UIService from './UIService'
+import UIService from './UIService'
 import DamageService from './DamageService'
 
 export default class GameService {
@@ -16,12 +16,12 @@ export default class GameService {
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
 
-    // this.uiService = new UIService()
+    this.uiService = new UIService()
     this.tileService = new TileService(this.level)
 
     this.damageService = new DamageService(this)
 
-    // this.uiService.init(this)
+    this.uiService.init(this)
 
     this.matchService = new MatchService(this)
     this.arrowService = new ArrowService(this)
@@ -64,10 +64,6 @@ export default class GameService {
     }
 
     this.allowInput()
-    // this.menu.show({
-    //   data: menu.data,
-    //   title: menu.title,
-    // })
 
     this.matchService.clearPath()
     this.allowInput()
@@ -81,6 +77,8 @@ export default class GameService {
   }
 
   restartLevel () {
+    this.game.input.onUp.remove(this.onRelease, this)
+    this.game.input.deleteMoveCallback(this.onMove, this)
     if (this.level > window.numLevels) {
       this.game.state.start('GameOver')
     } else {
@@ -88,10 +86,22 @@ export default class GameService {
     }
     this.game.world.bringToTop(this.arrowService.group)
     this.game.world.bringToTop(this.arrowService.damageText)
+    this.game.world.bringToTop(this.menu.group)
   }
 
   nextLevel () {
     this.level++
     this.restartLevel()
+    this.menu.show({ title: 'test' }).then(() => {
+      this.allowInput()
+    })
+  }
+
+  prevLevel () {
+    this.level--
+    this.restartLevel()
+    this.menu.show({ title: 'test' }).then(() => {
+      this.allowInput()
+    })
   }
 }
