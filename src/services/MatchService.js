@@ -11,7 +11,7 @@ export default class MatchService {
       return
     }
     if (this._checkForDeselect(tile) || tile.picked) {
-      this._highlightMatchingTiles(tile)
+      this._highlightMatchingTiles(tile, false)
       return
     }
 
@@ -19,14 +19,14 @@ export default class MatchService {
       this.path.length === 0 &&
       this.tileService.getTileType(tile) === 'bonus'
     ) {
-      this._highlightMatchingTiles(tile)
+      this._highlightMatchingTiles(tile, true)
       this._select(tile)
       return tile
     }
 
     const last = this._getLast(1)
     if (this._isValidMatch(tile, last)) {
-      this._highlightMatchingTiles(tile)
+      this._highlightMatchingTiles(tile, true)
       this._select(tile)
       return [tile, last]
     }
@@ -97,7 +97,7 @@ export default class MatchService {
     return this.tileService.tiles[this.path[this.path.length - n]]
   }
 
-  _highlightMatchingTiles (_tile) {
+  _highlightMatchingTiles (_tile, useIsLongEnough) {
     const tiles = this.tileService
       .getAdjacentForTile(_tile)
       .concat(this.tileService.getDiagonalForTile(_tile))
@@ -109,7 +109,7 @@ export default class MatchService {
         if (
           this.path.includes(tile.gridIndex) ||
           _tile === tile ||
-          this._tilesCanMatch(tile, _tile, _tile.index, false)
+          this._tilesCanMatch(tile, _tile, _tile.index, useIsLongEnough)
         ) {
           tile.alpha = 1
         }
@@ -122,7 +122,7 @@ export default class MatchService {
     if (this.path.length === 1) {
       this.matchType = last.index
     }
-    return this._tilesCanMatch(tile, last, this.matchType, true)
+    return this._tilesCanMatch(tile, last, this.matchType, false)
   }
 
   _tilesCanMatch (tile, last, matchType, useIsLongEnough) {
@@ -135,7 +135,8 @@ export default class MatchService {
     const isAdjacent = this.tileService._checkAdjacent(tile, last)
     const isBonus =
       this.tileService.getTileType(tile) === 'bonus' && tile.index === matchType
-    const isLongEnough = this.path.length === Math.ceil(matchType / 4)
+    const isLongEnough =
+      this.path.length === Math.ceil(matchType / 4) - (useIsLongEnough ? 1 : 0)
     const isBloodCell = tile.index === 1
     const thing = isLongEnough ? isBloodCell : isBonus
     return isAdjacent && thing

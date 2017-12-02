@@ -132,9 +132,10 @@ export default class TileService {
         )
         tiles.forEach(other => {
           if (
-            other &&
-            this._checkAdjacent(tile, other) &&
-            other.index === tile.index
+            tile.index === 2 ||
+            (other &&
+              this._checkAdjacent(tile, other) &&
+              other.index === tile.index)
           ) {
             numPairs++
           }
