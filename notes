@@ -82,4 +82,12 @@ Assets
     player matches adjacent tiles in a single line by tracing with finger
     each time the player matches, cancer cells divide
     player must eliminate all cancer cells to win
-    
+
+
+Each time player moves malignant cells multiply to adjacent cells
+the multiplying cell leaves behind benign cells
+if it multiplies to a non white cell, it multiplies malignant
+if it multiplies to a white cell, it multiplies benign
+the goal of each level is to remove all malignant cells
+you lose if the board ever contains only red cells and bad cells
+there could be 3 varieties of bad cells that are resistant to different types of treatment
