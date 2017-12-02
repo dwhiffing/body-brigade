@@ -87,6 +87,7 @@ export default class GameService {
       this.tileService.loadLevel(this.level)
     }
     this.game.world.bringToTop(this.arrowService.group)
+    this.game.world.bringToTop(this.arrowService.damageText)
   }
 
   nextLevel () {
