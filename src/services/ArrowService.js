@@ -4,6 +4,7 @@ export default class ArrowService {
   constructor (gameService) {
     this.game = window.game
     this.damageService = gameService.damageService
+    this.tileService = gameService.tileService
     this.matchService = gameService.matchService
     this.update = this.update.bind(this)
 
@@ -51,7 +52,11 @@ export default class ArrowService {
   }
 
   _createArrow (a, b) {
-    const arrow = this.game.add.sprite(b.x * 128 + 64, b.y * 128 - 64, 'arrows')
+    const arrow = this.game.add.sprite(
+      b.x * this.tileService.size + 64,
+      b.y * this.tileService.size - 64,
+      'arrows'
+    )
     arrow.anchor.set(0.5)
     arrow.scale.setTo(window.ratio)
     this.group.add(arrow)

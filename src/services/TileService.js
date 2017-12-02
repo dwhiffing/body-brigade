@@ -9,8 +9,11 @@ export default class TileService {
 
   loadLevel (level) {
     this.destroyLevel()
+    this.size = 128
 
-    this.map = this.game.add.tilemap('level' + level)
+    this.map = this.game.add.tilemap('level' + level, 2, 2)
+    this.map.tileWidth = this.size
+    this.map.tileHeight = this.size
     this.map.addTilesetImage('Tiles', 'tile')
     this.layer = this.map.createLayer('Tile Layer 1')
 
@@ -23,7 +26,15 @@ export default class TileService {
   }
 
   getTile ({ x, y }) {
-    return this.map.getTileWorldXY(x, y)
+    const _x = x / this.size
+    const _y = y / this.size
+    const dx = _x - Math.floor(Math.abs(_x))
+    const dy = _y - Math.floor(Math.abs(_y))
+    if (dx < 0.85 && dy < 0.85) {
+      const x = Math.floor(_x)
+      const y = Math.floor(_y)
+      return this.map.getTile(x, y, this.layer)
+    }
   }
 
   updateTiles () {
