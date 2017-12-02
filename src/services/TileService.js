@@ -8,21 +8,53 @@ export default class TileService {
   }
 
   loadLevel (level) {
-    this.destroyLevel()
+    this._destroyLevel()
     this.size = 128
 
-    this.map = this.game.add.tilemap('level' + level, 2, 2)
+    this.map = this.game.add.tilemap('level' + level)
     this.map.tileWidth = this.size
     this.map.tileHeight = this.size
     this.map.addTilesetImage('Tiles', 'tile')
     this.layer = this.map.createLayer('Tile Layer 1')
 
-    this.updateTiles()
-  }
+    this.timers = this.game.add.group()
+    for (let i = 0; i < 10; i++) {
+      const timer = this.game.add.text(50, 50, 'test')
+      timer.fill = 'white'
+      timer.fontSize = 42
+      timer.anchor.set(0.5)
+      timer.kill()
+      this.timers.add(timer)
+    }
 
-  destroyLevel () {
-    if (this.map) this.map.destroy()
-    if (this.layer) this.layer.destroy()
+    this._updateTileIndexes()
+
+    this.tiles.map((t, i) => {
+      t.updateTimer = this._getUpdateTimer(t)
+
+      t.resetSplitCounter = function () {
+        this.splitCounter = 3 - Math.ceil(this.index / 4)
+      }.bind(t)
+
+      t.updateSplitCounter = function () {
+        if (this.splitCounter === -1) {
+          this.resetSplitCounter()
+        }
+
+        if (this.splitCounter > 0) {
+          this.splitCounter -= 1
+          this.updateTimer()
+          return this.splitCounter + 1
+        }
+
+        return 0
+      }.bind(t)
+
+      if (this.getTileType(t) === 'malignant') {
+        t.updateTimer()
+      }
+      return t
+    })
   }
 
   getTile ({ x, y }) {
@@ -35,14 +67,6 @@ export default class TileService {
       const y = Math.floor(_y)
       return this.map.getTile(x, y, this.layer)
     }
-  }
-
-  updateTiles () {
-    this.tiles = [].concat.apply([], this.layer.layer.data)
-    this.tiles.map((t, i) => {
-      t.gridIndex = i
-      return t
-    })
   }
 
   updateTile (tile, index) {
@@ -71,29 +95,29 @@ export default class TileService {
       return this.getTileType(t) === 'malignant' ? t.gridIndex : -1
     })
 
-    this.map.forEach(tile => {
-      if (!badTiles.includes(tile.gridIndex)) {
+    this.map.forEach(badTile => {
+      if (!badTiles.includes(badTile.gridIndex)) {
         return
       }
 
-      if (tile.splitCounter === -1 || typeof tile.splitCounter !== 'number') {
-        tile.splitCounter = 3 - Math.ceil(tile.index / 4)
-      }
+      const splitCounter = badTile.updateSplitCounter()
 
-      if (tile.splitCounter > 0) {
-        tile.splitCounter -= 1
-      } else if (tile.splitCounter === 0) {
-        const tiles = compact(this.getAdjacentForTile(tile))
-        tiles.forEach(_tile => {
-          if (/bonus|normal/.test(this.getTileType(_tile))) {
-            this.updateTile(_tile, tile.index)
+      if (splitCounter === 0) {
+        badTile.timer.kill()
+
+        const tiles = compact(this.getAdjacentForTile(badTile))
+        tiles.forEach(adjacent => {
+          if (/bonus|normal/.test(this.getTileType(adjacent))) {
+            this.updateTile(adjacent, badTile.index)
+            adjacent.resetSplitCounter()
+            adjacent.updateTimer()
           }
         })
-        this.updateTile(tile, tile.index + 1)
+        this.updateTile(badTile, badTile.index + 1)
       }
     })
 
-    this.updateTiles()
+    this._updateTileIndexes()
   }
 
   getAdjacentForTile (tile) {
@@ -151,6 +175,32 @@ export default class TileService {
     })
 
     return matches.reduce((s, t) => t + s, 0)
+  }
+
+  _getUpdateTimer (t) {
+    t.timer = this.timers.getFirstDead()
+    t.size = window.tileSize
+    return () => {
+      if (typeof t.splitCounter !== 'number') {
+        t.resetSplitCounter()
+      }
+      const n = `${t.splitCounter + 1}`
+      t.timer.reset(t.x * t.size + t.size / 2, t.y * t.size + t.size / 2)
+      t.timer.text = n
+    }
+  }
+
+  _updateTileIndexes () {
+    this.tiles = [].concat.apply([], this.layer.layer.data)
+    this.tiles.map((t, i) => {
+      t.gridIndex = i
+      return t
+    })
+  }
+
+  _destroyLevel () {
+    if (this.map) this.map.destroy()
+    if (this.layer) this.layer.destroy()
   }
 
   _checkAdjacent (p1, p2) {
