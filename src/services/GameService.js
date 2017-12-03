@@ -148,7 +148,7 @@ export default class GameService {
 
   vibrate (n) {
     if (this.hapticsEnabled) {
-      navigator.vibrate(n)
+      navigator.vibrate && navigator.vibrate(n)
     }
   }
 }

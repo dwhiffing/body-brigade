@@ -34,7 +34,7 @@ export default class extends Phaser.State {
     this.background.inputEnabled = true
 
     this.background.events.onInputUp.add(() => {
-      navigator.vibrate(10)
+      navigator.vibrate && navigator.vibrate(10)
       game.state.start('Game')
     })
   }
