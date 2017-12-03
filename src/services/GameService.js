@@ -3,6 +3,7 @@ import TileService from './TileService'
 import MatchService from './MatchService'
 import Menu from '../sprites/Menu'
 import UIService from './UIService'
+import InstructionsService from './InstructionsService'
 import DamageService from './DamageService'
 
 export default class GameService {
@@ -33,9 +34,14 @@ export default class GameService {
     this.matchService = new MatchService(this)
     this.arrowService = new ArrowService(this)
 
-    this.menu = new Menu({ game: this.game })
     this.loseMenu = new Menu({ game: this.game, type: 'lose-menu' })
     this.winMenu = new Menu({ game: this.game, type: 'win-menu' })
+
+    this.instructionsService = new InstructionsService(this)
+
+    this.instructionsService.show().then(() => {
+      this.instructionsService.destroy()
+    })
 
     this.restartLevel()
   }
@@ -113,25 +119,18 @@ export default class GameService {
     this.game.input.onUp.remove(this.onRelease, this)
     this.game.input.deleteMoveCallback(this.onMove, this)
 
-    // if (this.menus[this.level]) {
-    //   this.menu.show(this.menus[this.level]).then(() => {
-    //     this.allowInput()
-    //   })
-    // } else {
     this.allowInput()
-    // }
 
     if (this.level < 1) {
       this.level = 1
     }
     if (this.level > window.numLevels) {
-      this.game.state.start('GameOver')
+      this.game.state.start('Menu')
     } else {
       this.tileService.loadLevel(this.level)
     }
     this.game.world.bringToTop(this.arrowService.group)
     this.game.world.bringToTop(this.arrowService.damageText)
-    this.game.world.bringToTop(this.menu.group)
     this.game.world.bringToTop(this.winMenu.group)
     this.game.world.bringToTop(this.loseMenu.group)
   }
