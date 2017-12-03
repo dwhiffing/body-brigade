@@ -7,7 +7,7 @@ export default class TileService {
     this.gameService = gameService
     this.group = this.game.add.group()
     this.timers = this.game.add.group()
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 36; i++) {
       const timer = this.game.add.text(50, 50, 'test')
       timer.fill = 'white'
       timer.fontSize = 42
@@ -37,10 +37,11 @@ export default class TileService {
     this._updateTileIndexes()
 
     this.tiles.map((t, i) => {
-      t.updateTimer = this._getUpdateTimer(t)
+      t.updateTimer = this._getUpdateTimer(t, i)
 
       t.resetSplitCounter = function () {
         this.splitCounter = 3 - Math.ceil(this.index / 4)
+        this.updateTimer()
       }.bind(t)
 
       t.updateSplitCounter = function () {
@@ -133,7 +134,6 @@ export default class TileService {
 
             if (!autoPlay) {
               adjacent.resetSplitCounter()
-              adjacent.updateTimer()
             }
 
             if (type === 'organ') {
@@ -204,8 +204,8 @@ export default class TileService {
     return matches.reduce((s, t) => t + s, 0)
   }
 
-  _getUpdateTimer (t) {
-    t.timer = this.timers.getFirstDead()
+  _getUpdateTimer (t, index) {
+    t.timer = this.timers.children[index]
     t.size = window.tileSize
     return () => {
       if (typeof t.splitCounter !== 'number') {
