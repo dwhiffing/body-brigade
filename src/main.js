@@ -24,7 +24,7 @@ class Game extends Phaser.Game {
     window.gridSize = window.gridDim * tileSize * window.scale
     window.tileSize = window.gridSize / window.gridDim
     window.leftBuffer = 0
-    window.topBuffer = (window.maxGameHeight - window.gridSize) / 2 - 65
+    window.topBuffer = (window.maxGameHeight - window.gridSize) / 2
 
     const width = window.maxGameWidth
     const height = window.innerHeight
