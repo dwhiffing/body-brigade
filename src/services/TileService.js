@@ -6,6 +6,7 @@ export default class TileService {
     this.game = window.game
     this.gameService = gameService
     this.group = this.game.add.group()
+    this.group.y = window.topBuffer
     this.timers = this.game.add.group()
     for (let i = 0; i < 36; i++) {
       const timer = this.game.add.text(50, 50, 'test')
@@ -66,6 +67,7 @@ export default class TileService {
   }
 
   getTile ({ x, y }) {
+    y -= window.topBuffer
     const _x = x / this.size
     const _y = y / this.size
     const dx = _x - Math.floor(Math.abs(_x))

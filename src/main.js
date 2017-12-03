@@ -8,23 +8,25 @@ import GameState from './states/Game'
 import MenuState from './states/Menu'
 import GameOverState from './states/GameOver'
 
+window.maxGameWidth = document.getElementById('content').offsetWidth
+window.maxGameHeight =
+  document.getElementById('content').offsetHeight || window.innerHeight
 window.numLevels = 30
 window.numTiles = 13
 window.gridDim = 6
-window.scale = window.innerWidth / 768
+window.scale = window.maxGameWidth / 768
+window.scale2 = window.innerWidth / 768
 
 class Game extends Phaser.Game {
   constructor () {
-    const tileSize = 70
-    const naturalGridSize = window.gridDim * tileSize
-    window.ratio = window.innerWidth / naturalGridSize
+    const tileSize = 128
 
-    window.gridSize = window.gridDim * tileSize * window.ratio
+    window.gridSize = window.gridDim * tileSize * window.scale
     window.tileSize = window.gridSize / window.gridDim
-    window.leftBuffer = window.innerWidth / 2 - window.gridSize / 2
-    window.topBuffer = window.innerHeight - window.gridSize - 120
+    window.leftBuffer = 0
+    window.topBuffer = (window.maxGameHeight - window.gridSize) / 2 - 65
 
-    const width = window.innerWidth
+    const width = window.maxGameWidth
     const height = window.innerHeight
     super(width, height, Phaser.CANVAS, 'content', null)
 

@@ -54,11 +54,11 @@ export default class ArrowService {
   _createArrow (a, b) {
     const arrow = this.game.add.sprite(
       b.x * this.tileService.size + this.tileService.size / 2,
-      b.y * this.tileService.size - this.tileService.size / 2,
+      b.y * this.tileService.size + this.tileService.size / 2,
       'arrows'
     )
     arrow.anchor.set(0.5)
-    arrow.scale.setTo(window.ratio)
+    arrow.scale.setTo(window.scale * 1.8)
     this.group.add(arrow)
     this.arrows.push(arrow)
 

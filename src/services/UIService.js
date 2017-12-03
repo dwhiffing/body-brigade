@@ -2,7 +2,7 @@ export default class UIService {
   constructor () {
     this.game = window.game
     this.group = this.game.add.group()
-    const x = window.game.width
+    const x = window.maxGameWidth
     const y = window.game.height
 
     this.footer = window.game.add.graphics(0, 0)
@@ -19,7 +19,9 @@ export default class UIService {
     this.gameService = gameService
     this.textGroup = this.game.add.group()
     const x =
-      window.game.width >= window.gridSize ? window.gridSize : window.game.width
+      window.maxGameWidth >= window.gridSize
+        ? window.gridSize
+        : window.game.width
     const y = window.game.height
     const last = this._initText(70, y - 60, 'Last', '#ffffff', 22, () => {
       this.gameService.prevLevel()
