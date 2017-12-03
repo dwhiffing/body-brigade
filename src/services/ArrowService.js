@@ -3,6 +3,7 @@ import Phaser from 'phaser'
 export default class ArrowService {
   constructor (gameService) {
     this.game = window.game
+    this.gameService = gameService
     this.damageService = gameService.damageService
     this.tileService = gameService.tileService
     this.matchService = gameService.matchService
@@ -35,7 +36,7 @@ export default class ArrowService {
 
     tiles.forEach((tile, index) => {
       if (index === 0) {
-        // window.navigator.vibrate(10)
+        this.gameService.vibrate(10)
         return
       }
 

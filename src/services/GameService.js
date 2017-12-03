@@ -11,6 +11,7 @@ export default class GameService {
     this.removedTiles = []
     this.visited = []
     this.state = state
+    this.hapticsEnabled = true
     this.level = 1
 
     this.menus = {
@@ -98,6 +99,7 @@ export default class GameService {
 
   loseCondition () {
     this.hasLost = true
+    this.vibrate(100)
     clearTimeout(this.timeout)
     this.loseMenu.show().then(() => {
       setTimeout(() => {
@@ -142,5 +144,12 @@ export default class GameService {
   prevLevel () {
     this.level--
     this.restartLevel()
+  }
+
+  vibrate (n) {
+    if (this.hapticsEnabled) {
+      console.log('vibrate', n)
+      navigator.vibrate(n)
+    }
   }
 }

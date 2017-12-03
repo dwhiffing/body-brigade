@@ -52,10 +52,12 @@ export default class UIService {
 
     this.muteButton = window.game.add.image(20, 10, 'mute-button')
     this.muteButton.inputEnabled = true
-    this.muteButton.events.onInputUp.add(() => {
-      console.log('mute')
-    })
     this.group.add(this.muteButton)
+    this.muteButton.events.onInputUp.add(() => {
+      this.gameService.hapticsEnabled = !this.gameService.hapticsEnabled
+      this.muteButton.alpha = this.gameService.hapticsEnabled ? 1 : 0.5
+      console.log(this.muteButton.alpha, this.gameService.hapticsEnabled)
+    })
 
     this.quitButton = window.game.add.image(x - 20, 10, 'stop-button')
     this.quitButton.anchor.x = 1
