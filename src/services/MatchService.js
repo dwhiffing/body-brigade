@@ -6,10 +6,13 @@ export default class MatchService {
   }
 
   selectTile (position) {
-    const tile = this.tileService.getTile(position)
+    const data = this.tileService.getTile(position)
+    const tile = data.tile
+
     if (!tile) {
       return
     }
+
     if (this._checkForDeselect(tile) || tile.picked) {
       this._highlightMatchingTiles(tile, false)
       return
@@ -86,7 +89,18 @@ export default class MatchService {
   }
 
   _checkForDeselect (tile) {
-    if (this._getLast(2) && tile.gridIndex === this._getLast(2).gridIndex) {
+    const last = this._getLast(2)
+    const _last = this._getLast(1)
+    const isReselectingBloodCell =
+      tile.index === 13 &&
+      _last &&
+      _last.index === 13 &&
+      tile.gridIndex !== _last.gridIndex &&
+      this.tileService._checkAdjacent(tile, last)
+
+    const isInPath = last && tile.gridIndex === last.gridIndex
+
+    if (isInPath || isReselectingBloodCell) {
       this._getLast(1).picked = false
       this.path.pop()
       return true

@@ -72,11 +72,10 @@ export default class TileService {
     const _y = y / this.size
     const dx = _x - Math.floor(Math.abs(_x))
     const dy = _y - Math.floor(Math.abs(_y))
-    if (dx < 0.85 && dy < 0.85) {
-      const x = Math.floor(_x)
-      const y = Math.floor(_y)
-      return this.map.getTile(x, y, this.layer)
-    }
+    const inThreshold = dx < 0.75 && dy < 0.75
+    const tileX = Math.floor(_x)
+    const tileY = Math.floor(_y)
+    return { tile: this.map.getTile(tileX, tileY, this.layer), inThreshold }
   }
 
   updateTile (tile, index) {

@@ -20,8 +20,8 @@ export default class ArrowService {
   }
 
   update (position, tiles) {
-    this.damageText.x = position.x
-    this.damageText.y = position.y - 80
+    // this.damageText.x = position.x
+    // this.damageText.y = position.y - 80
 
     if (JSON.stringify(tiles.map(t => t.gridIndex)) === this.tileIndexes) {
       return
@@ -29,10 +29,10 @@ export default class ArrowService {
     this.clear()
     this.tileIndexes = JSON.stringify(tiles.map(t => t.gridIndex))
 
-    if (this.matchService.hasValidMatch()) {
-      this.damageText.alpha = 1
-      this.damageText.text = `MATCH`
-    }
+    // if (this.matchService.hasValidMatch()) {
+    // this.damageText.alpha = 1
+    // this.damageText.text = `MATCH`
+    // }
 
     tiles.forEach((tile, index) => {
       if (index === 0) {
