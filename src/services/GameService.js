@@ -148,7 +148,6 @@ export default class GameService {
 
   vibrate (n) {
     if (this.hapticsEnabled) {
-      console.log('vibrate', n)
       navigator.vibrate(n)
     }
   }

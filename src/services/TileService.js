@@ -218,7 +218,7 @@ export default class TileService {
         t.resetSplitCounter()
       }
       const n = `${t.splitCounter + 1}`
-      t.timer.reset(t.x * t.size + t.size, t.y * t.size + t.size / 6)
+      t.timer.reset(t.x * t.size + t.size / 2, t.y * t.size + t.size / 2)
       t.timer.text = n
     }
   }
