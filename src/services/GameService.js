@@ -23,7 +23,7 @@ export default class GameService {
     this.game.input.onDown.add(this.onPress, this)
 
     this.uiService = new UIService()
-    this.tileService = new TileService(this.level)
+    this.tileService = new TileService(this, this.level)
 
     this.damageService = new DamageService(this)
 
@@ -65,8 +65,12 @@ export default class GameService {
     this.allowInput()
   }
 
-  doSpread (autoPlay) {
-    this.tileService.spreadCancer(autoPlay)
+  doSpread () {
+    if (this.hasLost) {
+      return
+    }
+
+    this.tileService.spreadCancer(this.autoPlay)
 
     if (this.tileService.numMalignantRemaining() === 0) {
       setTimeout(() => {
@@ -75,18 +79,29 @@ export default class GameService {
       return
     }
 
-    if (autoPlay || this.tileService.numMatchesRemaining() === 0) {
-      setTimeout(() => this.doSpread(true), 500)
+    if (this.autoPlay || this.tileService.numMatchesRemaining() === 0) {
+      this.autoPlay = true
+      this.timeout = setTimeout(this.doSpread.bind(this), 150)
     }
   }
 
   allowInput () {
+    this.hasLost = false
     if (!this.game.input.onDown.has(this.onPress, this)) {
       this.game.input.onDown.add(this.onPress, this)
     }
   }
 
+  loseCondition () {
+    this.hasLost = true
+    clearTimeout(this.timeout)
+    setTimeout(() => {
+      this.restartLevel()
+    }, 500)
+  }
+
   restartLevel () {
+    this.autoPlay = false
     this.game.input.onUp.remove(this.onRelease, this)
     this.game.input.deleteMoveCallback(this.onMove, this)
 

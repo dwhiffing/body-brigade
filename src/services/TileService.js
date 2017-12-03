@@ -2,9 +2,10 @@ import get from 'lodash/get'
 import compact from 'lodash/compact'
 
 export default class TileService {
-  constructor (level) {
+  constructor (gameService, level) {
     this.game = window.game
     this.size = 128
+    this.gameService = gameService
     this.group = this.game.add.group()
     this.timers = this.game.add.group()
     for (let i = 0; i < 10; i++) {
@@ -83,6 +84,9 @@ export default class TileService {
     if (tile.index === window.numTiles) {
       return 'normal'
     }
+    if (tile.index === window.numTiles + 1) {
+      return 'organ'
+    }
     const index = (tile.index - 1) % 4
     switch (index) {
       case 0:
@@ -114,11 +118,17 @@ export default class TileService {
 
         const tiles = compact(this.getAdjacentForTile(badTile))
         tiles.forEach(adjacent => {
-          if (/bonus|normal/.test(this.getTileType(adjacent))) {
+          const type = this.getTileType(adjacent)
+          if (/bonus|normal|organ/.test(type)) {
             this.updateTile(adjacent, index)
+
             if (!autoPlay) {
               adjacent.resetSplitCounter()
               adjacent.updateTimer()
+            }
+
+            if (type === 'organ') {
+              this.gameService.loseCondition()
             }
           }
         })
