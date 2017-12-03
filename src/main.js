@@ -8,7 +8,7 @@ import GameState from './states/Game'
 import MenuState from './states/Menu'
 import GameOverState from './states/GameOver'
 
-window.numLevels = 20
+window.numLevels = 30
 window.numTiles = 13
 
 class Game extends Phaser.Game {

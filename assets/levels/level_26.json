@@ -1,0 +1,37 @@
+{ "height":6,
+ "layers":[
+        {
+         "data":[11, 11, 11, 11, 11, 11, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13],
+         "height":6,
+         "name":"Tile Layer 1",
+         "opacity":1,
+         "type":"tilelayer",
+         "visible":true,
+         "width":6,
+         "x":0,
+         "y":0
+        }],
+ "nextobjectid":1,
+ "orientation":"orthogonal",
+ "renderorder":"right-down",
+ "tiledversion":"1.0.3",
+ "tileheight":128,
+ "tilesets":[
+        {
+         "columns":7,
+         "firstgid":1,
+         "image":"..\/images\/Tiles.png",
+         "imageheight":256,
+         "imagewidth":896,
+         "margin":0,
+         "name":"Tiles",
+         "spacing":0,
+         "tilecount":14,
+         "tileheight":128,
+         "tilewidth":128
+        }],
+ "tilewidth":128,
+ "type":"map",
+ "version":1,
+ "width":6
+}
