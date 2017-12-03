@@ -106,7 +106,7 @@ export default class GameService {
 
   loseCondition () {
     this.hasLost = true
-    this.vibrate(100)
+    this.vibrate(500)
     clearTimeout(this.timeout)
     this.loseMenu.show().then(() => {
       setTimeout(() => {
