@@ -31,6 +31,8 @@ export default class extends Phaser.State {
     this.load.spritesheet('arrows', 'assets/images/arrows.png', 210, 210)
     this.load.image('tile', 'assets/images/Tiles.png')
     this.load.image('menu', 'assets/images/menu@2x.png')
+    this.load.image('win-menu', 'assets/images/win-menu@2x.png')
+    this.load.image('lose-menu', 'assets/images/lose-menu@2x.png')
     this.load.image('button', 'assets/images/button@2x.png')
     this.load.image('header', 'assets/images/header.png')
     this.load.image('footer', 'assets/images/footer.png')

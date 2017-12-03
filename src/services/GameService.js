@@ -33,6 +33,8 @@ export default class GameService {
     this.arrowService = new ArrowService(this)
 
     this.menu = new Menu({ game: this.game })
+    this.loseMenu = new Menu({ game: this.game, type: 'lose-menu' })
+    this.winMenu = new Menu({ game: this.game, type: 'win-menu' })
 
     this.restartLevel()
   }
@@ -73,9 +75,11 @@ export default class GameService {
     this.tileService.spreadCancer(this.autoPlay)
 
     if (this.tileService.numMalignantRemaining() === 0) {
-      setTimeout(() => {
-        this.nextLevel()
-      }, 1000)
+      this.winMenu.show().then(() => {
+        setTimeout(() => {
+          this.nextLevel()
+        }, 500)
+      })
       return
     }
 
@@ -95,9 +99,11 @@ export default class GameService {
   loseCondition () {
     this.hasLost = true
     clearTimeout(this.timeout)
-    setTimeout(() => {
-      this.restartLevel()
-    }, 500)
+    this.loseMenu.show().then(() => {
+      setTimeout(() => {
+        this.restartLevel()
+      }, 500)
+    })
   }
 
   restartLevel () {
@@ -113,6 +119,9 @@ export default class GameService {
     this.allowInput()
     // }
 
+    if (this.level < 1) {
+      this.level = 1
+    }
     if (this.level > window.numLevels) {
       this.game.state.start('GameOver')
     } else {
@@ -121,6 +130,8 @@ export default class GameService {
     this.game.world.bringToTop(this.arrowService.group)
     this.game.world.bringToTop(this.arrowService.damageText)
     this.game.world.bringToTop(this.menu.group)
+    this.game.world.bringToTop(this.winMenu.group)
+    this.game.world.bringToTop(this.loseMenu.group)
   }
 
   nextLevel () {
