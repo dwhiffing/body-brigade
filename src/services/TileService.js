@@ -119,7 +119,15 @@ export default class TileService {
         const tiles = compact(this.getAdjacentForTile(badTile))
         tiles.forEach(adjacent => {
           const type = this.getTileType(adjacent)
-          if (/bonus|normal|organ/.test(type)) {
+          if (/bonus|normal|organ|strong/.test(type)) {
+            if (type === 'strong') {
+              if (
+                Math.ceil(adjacent.index / 4) === Math.ceil(badTile.index / 4)
+              ) {
+                return
+              }
+            }
+
             this.updateTile(adjacent, index)
 
             if (!autoPlay) {

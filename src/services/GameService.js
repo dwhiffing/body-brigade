@@ -105,13 +105,13 @@ export default class GameService {
     this.game.input.onUp.remove(this.onRelease, this)
     this.game.input.deleteMoveCallback(this.onMove, this)
 
-    if (this.menus[this.level]) {
-      this.menu.show(this.menus[this.level]).then(() => {
-        this.allowInput()
-      })
-    } else {
-      this.allowInput()
-    }
+    // if (this.menus[this.level]) {
+    //   this.menu.show(this.menus[this.level]).then(() => {
+    //     this.allowInput()
+    //   })
+    // } else {
+    this.allowInput()
+    // }
 
     if (this.level > window.numLevels) {
       this.game.state.start('GameOver')
