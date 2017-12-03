@@ -11,7 +11,7 @@ export default class TileService {
     for (let i = 0; i < 36; i++) {
       const timer = this.game.add.text(50, 50, 'test')
       timer.fill = 'white'
-      timer.fontSize = 16
+      timer.fontSize = Math.ceil(25 * window.scale)
       timer.anchor.set(0.5)
       this.timers.add(timer)
     }

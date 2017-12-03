@@ -4,13 +4,21 @@ export default class UIService {
     this.group = this.game.add.group()
 
     this.header = window.game.add.image(0, 0, 'header')
-    this.header.scale.set(window.innerWidth / 640)
+    this.header.scale.set(this.game.width / 640)
     this.group.add(this.header)
 
+    if (this.header.height > 90) {
+      this.header.height = 90
+    }
+
     this.footer = window.game.add.image(0, this.game.height, 'footer')
-    this.footer.scale.set(window.innerWidth / 640)
+    this.footer.scale.set(this.game.width / 640)
     this.footer.anchor.y = 1
     this.group.add(this.footer)
+
+    if (this.footer.height > 90) {
+      this.footer.height = 90
+    }
   }
 
   init (gameService) {
