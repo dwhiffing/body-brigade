@@ -11,7 +11,7 @@ export default class TileService {
     for (let i = 0; i < 36; i++) {
       const timer = this.game.add.text(50, 50, 'test')
       timer.fill = 'white'
-      timer.fontSize = 42
+      timer.fontSize = 23
       timer.anchor.set(0.5)
       this.timers.add(timer)
     }
@@ -218,7 +218,7 @@ export default class TileService {
         t.resetSplitCounter()
       }
       const n = `${t.splitCounter + 1}`
-      t.timer.reset(t.x * t.size + t.size / 2, t.y * t.size + t.size / 2)
+      t.timer.reset(t.x * t.size + t.size, t.y * t.size + t.size / 6)
       t.timer.text = n
     }
   }
