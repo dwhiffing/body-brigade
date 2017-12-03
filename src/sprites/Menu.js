@@ -12,6 +12,8 @@ export default class Menu {
 
     this.group = game.add.group()
 
+    this.gameService = game.gameService
+
     this.duration = duration
 
     if (overlay) {
@@ -42,6 +44,7 @@ export default class Menu {
       tween.onComplete.add(() => {
         this.background.inputEnabled = true
         this.background.events.onInputUp.add(() => {
+          this.gameService.vibrate(10)
           this.hide()
         })
       })

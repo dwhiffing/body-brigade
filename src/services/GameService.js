@@ -23,6 +23,7 @@ export default class GameService {
 
     this.allowInput = this.allowInput.bind(this)
     this.game.input.onDown.add(this.onPress, this)
+    this.game.gameService = this
 
     this.uiService = new UIService()
     this.tileService = new TileService(this, this.level)

@@ -5,6 +5,7 @@ export default class InstructionService {
     this.game = window.game
     this.instructions = []
     this.group = this.game.add.group()
+    this.gameService = this.game.gameService
     this.base = new Menu({
       game: this.game,
       type: 'instructions_base',
@@ -26,6 +27,7 @@ export default class InstructionService {
     this.close = this.game.add.sprite(this.game.width - 70, 30, 'close')
     this.close.inputEnabled = true
     this.close.events.onInputUp.add(() => {
+      this.gameService.vibrate(10)
       this.destroy()
     })
     this.group.add(this.close)
@@ -73,7 +75,6 @@ export default class InstructionService {
   }
 
   destroy () {
-    console.log('test')
     this.group.removeAll(true)
   }
 }

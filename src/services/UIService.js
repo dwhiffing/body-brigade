@@ -36,6 +36,7 @@ export default class UIService {
     this.leftButton.anchor.y = 1
     this.leftButton.inputEnabled = true
     this.leftButton.events.onInputUp.add(() => {
+      this.gameService.vibrate(10)
       this.gameService.prevLevel()
     })
     this.group.add(this.leftButton)
@@ -45,6 +46,7 @@ export default class UIService {
     this.nextButton.anchor.y = 1
     this.nextButton.inputEnabled = true
     this.nextButton.events.onInputUp.add(() => {
+      this.gameService.vibrate(10)
       this.gameService.nextLevel()
     })
     this.group.add(this.nextButton)
@@ -54,6 +56,7 @@ export default class UIService {
     this.retryButton.anchor.y = 1
     this.retryButton.inputEnabled = true
     this.retryButton.events.onInputUp.add(() => {
+      this.gameService.vibrate(10)
       this.gameService.restartLevel()
     })
     this.group.add(this.retryButton)
@@ -63,6 +66,9 @@ export default class UIService {
     this.group.add(this.muteButton)
     this.muteButton.events.onInputUp.add(() => {
       this.gameService.hapticsEnabled = !this.gameService.hapticsEnabled
+      if (this.gameService.hapticsEnabled) {
+        this.gameService.vibrate(10)
+      }
       this.muteButton.alpha = this.gameService.hapticsEnabled ? 1 : 0.5
     })
 
@@ -70,6 +76,7 @@ export default class UIService {
     this.quitButton.anchor.x = 1
     this.quitButton.inputEnabled = true
     this.quitButton.events.onInputUp.add(() => {
+      this.gameService.vibrate(10)
       this.game.state.start('Menu')
     })
     this.group.add(this.quitButton)
