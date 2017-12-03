@@ -120,7 +120,11 @@ export default class TileService {
         const index = badTile.index
         this.updateTile(badTile, badTile.index + 1)
 
-        const tiles = compact(this.getAdjacentForTile(badTile))
+        let tiles = compact(this.getAdjacentForTile(badTile))
+        if (Math.ceil(badTile.index / 4) === 3) {
+          tiles = tiles.concat(compact(this.getDiagonalForTile(badTile)))
+        }
+
         tiles.forEach(adjacent => {
           const type = this.getTileType(adjacent)
           if (/bonus|normal|organ|strong/.test(type)) {
