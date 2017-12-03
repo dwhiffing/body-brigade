@@ -42,6 +42,9 @@ export default class MatchService {
   }
 
   hasValidMatch (match = this.getMatch()) {
+    if (match.length === 0) {
+      return false
+    }
     return match[match.length - 1].index === window.numTiles
   }
 

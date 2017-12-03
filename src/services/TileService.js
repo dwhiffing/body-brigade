@@ -5,27 +5,32 @@ export default class TileService {
   constructor (level) {
     this.game = window.game
     this.size = 128
-  }
-
-  loadLevel (level) {
-    this._destroyLevel()
-    this.size = 128
-
-    this.map = this.game.add.tilemap('level' + level)
-    this.map.tileWidth = this.size
-    this.map.tileHeight = this.size
-    this.map.addTilesetImage('Tiles', 'tile')
-    this.layer = this.map.createLayer('Tile Layer 1')
-
+    this.group = this.game.add.group()
     this.timers = this.game.add.group()
     for (let i = 0; i < 10; i++) {
       const timer = this.game.add.text(50, 50, 'test')
       timer.fill = 'white'
       timer.fontSize = 42
       timer.anchor.set(0.5)
-      timer.kill()
       this.timers.add(timer)
     }
+    this.group.add(this.timers)
+  }
+
+  loadLevel (level) {
+    this._destroyLevel()
+    this.size = 128
+
+    this.timers.forEach(t => t.kill())
+
+    this.map = this.game.add.tilemap('level' + level)
+    this.map.tileWidth = this.size
+    this.map.tileHeight = this.size
+    this.map.addTilesetImage('Tiles', 'tile')
+    this.layer = this.map.createLayer('Tile Layer 1')
+    this.group.add(this.layer)
+
+    this.group.bringToTop(this.timers)
 
     this._updateTileIndexes()
 
@@ -70,6 +75,7 @@ export default class TileService {
   }
 
   updateTile (tile, index) {
+    tile.timer.kill()
     this.map.putTile(index, tile.x, tile.y)
   }
 
@@ -90,7 +96,7 @@ export default class TileService {
     }
   }
 
-  spreadCancer () {
+  spreadCancer (autoPlay) {
     const badTiles = this.tiles.map((t, i) => {
       return this.getTileType(t) === 'malignant' ? t.gridIndex : -1
     })
@@ -102,18 +108,20 @@ export default class TileService {
 
       const splitCounter = badTile.updateSplitCounter()
 
-      if (splitCounter === 0) {
-        badTile.timer.kill()
+      if (splitCounter === 0 || autoPlay) {
+        const index = badTile.index
+        this.updateTile(badTile, badTile.index + 1)
 
         const tiles = compact(this.getAdjacentForTile(badTile))
         tiles.forEach(adjacent => {
           if (/bonus|normal/.test(this.getTileType(adjacent))) {
-            this.updateTile(adjacent, badTile.index)
-            adjacent.resetSplitCounter()
-            adjacent.updateTimer()
+            this.updateTile(adjacent, index)
+            if (!autoPlay) {
+              adjacent.resetSplitCounter()
+              adjacent.updateTimer()
+            }
           }
         })
-        this.updateTile(badTile, badTile.index + 1)
       }
     })
 

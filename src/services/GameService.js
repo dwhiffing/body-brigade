@@ -59,24 +59,25 @@ export default class GameService {
 
     const match = this.matchService.resolveMatch()
     if (match) {
-      this.tileService.spreadCancer(match)
-      const hasWon = this.tileService.numMalignantRemaining() === 0
-      const numMatches = this.tileService.numMatchesRemaining()
-      const hasLost = numMatches === 0
-
-      if (hasWon) {
-        setTimeout(() => {
-          this.nextLevel()
-        }, 1000)
-      } else if (hasLost) {
-        this.restartLevel()
-      }
+      this.doSpread()
     }
-
-    this.allowInput()
-
     this.matchService.clearPath()
     this.allowInput()
+  }
+
+  doSpread (autoPlay) {
+    this.tileService.spreadCancer(autoPlay)
+
+    if (this.tileService.numMalignantRemaining() === 0) {
+      setTimeout(() => {
+        this.nextLevel()
+      }, 1000)
+      return
+    }
+
+    if (autoPlay || this.tileService.numMatchesRemaining() === 0) {
+      setTimeout(() => this.doSpread(true), 500)
+    }
   }
 
   allowInput () {
