@@ -13,7 +13,7 @@ export default class Menu {
     this.title.fill = '#ffffff'
     this.group.add(this.title)
     this.group.alpha = 0
-    this.group.scale.setTo(window.ratio)
+    this.group.scale.setTo(window.scale)
     this.background.inputEnabled = true
     this.group.position = {
       x: this.game.width / 2 - this.group.width / 2,

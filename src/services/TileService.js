@@ -4,7 +4,6 @@ import compact from 'lodash/compact'
 export default class TileService {
   constructor (gameService, level) {
     this.game = window.game
-    this.size = 128
     this.gameService = gameService
     this.group = this.game.add.group()
     this.timers = this.game.add.group()
@@ -16,19 +15,21 @@ export default class TileService {
       this.timers.add(timer)
     }
     this.group.add(this.timers)
+    this.size = Math.floor(window.scale * 128)
+    this.totalWidth = window.innerWidth * window.devicePixelRatio
+    this.totalHeight = window.innerHeight * window.devicePixelRatio
   }
 
   loadLevel (level) {
     this._destroyLevel()
-    this.size = 128
 
     this.timers.forEach(t => t.kill())
 
     this.map = this.game.add.tilemap('level' + level)
-    this.map.tileWidth = this.size
-    this.map.tileHeight = this.size
     this.map.addTilesetImage('Tiles', 'tile')
     this.layer = this.map.createLayer('Tile Layer 1')
+    this.layer.setScale(window.scale)
+    this.layer.resize(this.totalWidth, this.totalHeight)
     this.group.add(this.layer)
 
     this.group.bringToTop(this.timers)

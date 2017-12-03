@@ -21,19 +21,12 @@ export default class UIService {
     const x =
       window.game.width >= window.gridSize ? window.gridSize : window.game.width
     const y = window.game.height
-    const last = this._initText(70, y - 60, 'Last level', '#ffffff', 22, () => {
+    const last = this._initText(70, y - 60, 'Last', '#ffffff', 22, () => {
       this.gameService.prevLevel()
     })
-    const next = this._initText(
-      x - 70,
-      y - 60,
-      'Next Level',
-      '#ffffff',
-      22,
-      () => {
-        this.gameService.nextLevel()
-      }
-    )
+    const next = this._initText(x - 70, y - 60, 'Next', '#ffffff', 22, () => {
+      this.gameService.nextLevel()
+    })
     next.anchor.x = 1
     const retry = this._initText(x / 2, y - 60, 'Retry', '#ffffff', 22, () => {
       this.gameService.restartLevel()

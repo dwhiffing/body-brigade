@@ -10,11 +10,12 @@ import GameOverState from './states/GameOver'
 
 window.numLevels = 30
 window.numTiles = 13
+window.gridDim = 6
+window.scale = window.innerWidth / 768
 
 class Game extends Phaser.Game {
   constructor () {
     const tileSize = 70
-    window.gridDim = 6
     const naturalGridSize = window.gridDim * tileSize
     window.ratio = window.innerWidth / naturalGridSize
 
