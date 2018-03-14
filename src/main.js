@@ -11,7 +11,7 @@ import GameOverState from './states/GameOver'
 window.maxGameWidth = document.getElementById('content').offsetWidth
 window.maxGameHeight =
   document.getElementById('content').offsetHeight || window.innerHeight
-window.numLevels = 25
+window.numLevels = 26
 window.numTiles = 13
 window.gridDim = 6
 window.scale = window.maxGameWidth / 768

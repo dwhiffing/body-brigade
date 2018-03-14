@@ -19,7 +19,7 @@ export default class InstructionService {
         type: 'instructions_' + i,
         overlay: false,
         scale: window.scale * 0.8,
-        duration: 125
+        duration: 50
       })
       this.group.add(this.instructions[i].group)
     }
